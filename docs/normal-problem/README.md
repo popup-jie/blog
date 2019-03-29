@@ -1,13 +1,117 @@
+---
+pageClass: custom-page-class
+---
+
 # vue常见问题
 
-## 强制刷新当前页面
+## vue生命周期
 
+::: danger 补充
+111
+:::
+
+## vue2.6版本更新
+
+### slot插槽的更新
+
+> Vue v2.6版本期，废除了`slot`和`slot-scope`特性，采用`v-slot`代替
+
+#### 默认插槽
+``` html
+<baz v-slot="baz"></baz>
+```
+
+#### 嵌套默认插槽
+``` html
+<foo v-slot="foo">
+  <baz v-slot="baz">
+    <bar v-slot="bar">
+      {{foo}} {{baz}} {{bar}} 
+    </bar>
+  </baz>
+</foo>
+```
+
+#### 具名插槽
+``` html
+<current-user>
+  <template v-slot:one="user">
+    {{user.name}}
+  </template>
+</current-user>
+```
+
+#### 混用插槽
+``` html
+<current-user>
+  <template v-slot:one="one">
+    <bar v-slot="bar">
+      {{one}} {{bar}}
+    </bar>
+  </template>
+  <template v-slot:two="two">
+    <bar v-slot="bar">
+      <div>{{two}} {{bar}}</div>
+    </bar>
+  </template>
+</current-user>
+```
+### 异步错误处理
+Vue的内置错误处理机制(errorCaptured钩子和全局的errorHandler钩子)，现在也捕获v-on处理程序内部的错误
+<p></p>
+建议使用async / await 异步函数隐式返回Promiss
+
+``` js
+export default {
+  async mounted() {
+    // 如果在这里抛出异步错误，由errorCaptured和Vue.config.errorHandler捕获
+    this.posts = await api.getPosts()
+  }
+}
+```
+
+### 动态指令参数
+``` html 
+<div v-bind:[event]="handler"></div>
+<!-- 缩写 -->
+<div :[event]="hanlder"></div>
+
+<div v-on:[event]="hanlder"></div>
+<!-- 缩写 -->
+<div @[event]="hanlder"></div>
+
+<my-compontent>
+  <template v-slot:[slotName]>
+  </template>
+</my-compontent>
+
+<!-- 缩写 -->
+<my-compontent>
+  <template #[slotName]></template>
+</my-compontent>
+
+<div :[key+"foo"]="value"></div> <!-- 可能不会执行 -->
+<div :[`${key}foo`]="value"></div>
+
+```
+
+### 显式创建独立活动对象
+引入一个新的全局api，可以用来显式地创建响应式对象：
+``` js
+const reactiveState = Vue.observable({
+  count: 0
+})
+// 生产的对象可以直接用在计算属性(computed property) 和 渲染函数(render)中，并会在被改动时触发相应的更新
+```
+
+### 服务端渲染期间的数据预取(SSR)
+`serverPrefetch`钩子允许（而不是仅仅路由级组件）的任务部件的服务器渲染期间预取数据，从而允许更灵活的使用和减少数据提取与路由器之间的耦合。
+
+## 强制刷新当前页面
 ::: tip 场景
 通常我们在处理列表时，常常有一条数据删除或者新增数据后需要刷新当前页面
 :::
-
-``` vue
-<script>
+``` js
 export default {
   methods: {
     addItem() {
@@ -21,7 +125,6 @@ export default {
     }
   }
 }
-</script>
 ```
 
 * 而如果采用vue-router刷新路由的方法，页面是不会刷新的
@@ -252,37 +355,7 @@ vuex相关介绍及用法查看：[vuex是什么](https://vuex.vuejs.org/zh/)
   }
 </script>
 ```
-<template>
-  <div>
-    <button @click="obj.a++">{{obj.a}}</button>
-    <button @click='obj.b++'>{{obj.b}}</button>
-    <div>
-      <button @click='lookNowVal()'>查看当前a，b的值</button>
-    </div>
-  </div>
-</template>
-
-<script>
-  export default {
-    data() {
-      return {
-        obj: {}
-      }
-    },
-    created() {
-      this.obj = {
-        a: 0
-      }
-      this.obj.b = 0
-    },
-    methods: {
-      lookNowVal() {
-        console.log('a :' + this.obj.a)
-        console.log('b :' + this.obj.b)
-      }
-    }
-  }
-</script>
+<VueNoSetExample/>
 
 分别在`A按钮`和`B按钮`连续点击3次，会看到在`a按钮`的数据在增加，而当点击了`b按钮`的情况下，会看到数据没有实时更新，但是我当我们点击查看时，却可以看到数据，当我们点击`查看`的按钮，控制台会打印出如下信息
 
@@ -302,41 +375,11 @@ b: 3
 
 ``` js
 created() {
-  this.obj = {a: 0}
-  this.$set(this.obj, 'b', 0)
+  this.setObj = {a: 0}
+  this.$set(this.setObj, 'b', 0)
 }
 ```
-
-<template>
-  <div>
-    <button @click="obj.a++">{{obj.a}}</button>
-    <button @click='obj.b++'>{{obj.b}}</button>
-    <div>
-      <button @click='lookNowVal()'>查看当前a，b的值</button>
-    </div>
-  </div>
-</template>
-
-<script>
-  export default {
-    data() {
-      return {
-        obj: {}
-      }
-    },
-    created() {
-      this.obj = {a: 0}
-      this.$set(this.obj, 'b', 0)
-    },
-    methods: {
-      lookNowVal() {
-        console.log('a :' + this.obj.a)
-        console.log('b :' + this.obj.b)
-      }
-    }
-  }
-</script>
-
+<VueSetExample/>
 ## 小球动画处理
 
 学习`vue高仿饿了吗`项目，小球掉落动画
