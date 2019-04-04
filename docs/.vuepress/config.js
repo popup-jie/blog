@@ -32,7 +32,8 @@ module.exports = {
           collapsable: false,
           children: [
             '',
-            'browse-proxy'
+            'browse-proxy',
+            'js-normal'
           ]
         },
       ],

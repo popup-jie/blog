@@ -129,3 +129,8 @@
   Object.prototype.a = 1
   var f1 = new fn()
   console.log(f1)
+
+
+::: tip
+  ssr是node作为中间层的一个应用，而不是node作为中间层
+:::
