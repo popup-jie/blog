@@ -3,8 +3,11 @@ pageClass: custom-page-class
 ---
 
 # 你所不知道的console
+
+## console的用法
 `console`的基本用法，可以查看以下这篇文章 [九个Console命令，让js调试更简单](https://github.com/dwqs/blog/issues/32)，小编我就不做任何陈诉了。
 
+## vue中扩展自己的log函数
 > 接下来介绍一下，如何在`vue`项目中扩展`console`并快速定位问题
 
 新建一个**console**类文件

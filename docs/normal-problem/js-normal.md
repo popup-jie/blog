@@ -178,3 +178,6 @@ console.log(obj1.b.f === obj2.b.f)
 * 如果在针对`数据`或者不存在`undefied`，`NaN`，`function`，`RegExp`，`Error`等属性值时候，建议用`JSON.parse`和`JSON.stringify`，因为我们都知道`JSON.parse`和`JSON.stringify`是浏览器的内置方法，处理起来肯定是要比`递归`处理数据要快
 * 如果实现较为复杂的数据的情况下，就用**深度拷贝**方法
 * 如果项目中有引用`lodash`包的话，也可以直接使用它的内置方法`_.cloneDeep`方法
+
+## hasOwnProperty
+> hasOwnProperty 用来检测一个对象是否含有特定的自身对象，会忽略掉从原型链上继承到的属性
