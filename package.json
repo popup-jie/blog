@@ -16,5 +16,8 @@
   "license": "ISC",
   "devDependencies": {
     "vuepress": "^1.0.0-alpha.42"
+  },
+  "dependencies": {
+    "vuedraggable": "^2.20.0"
   }
 }

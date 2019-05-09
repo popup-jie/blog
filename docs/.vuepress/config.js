@@ -28,6 +28,7 @@ module.exports = {
                 collapsable: false,
                 children: [
                     '',
+                    'vue-plugins',
                     'browse-proxy',
                     'js-normal',
                     'console'
