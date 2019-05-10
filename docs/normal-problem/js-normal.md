@@ -181,3 +181,46 @@ console.log(obj1.b.f === obj2.b.f)
 
 ## hasOwnProperty
 > hasOwnProperty 用来检测一个对象是否含有特定的自身对象，会忽略掉从原型链上继承到的属性
+
+**使用hasOwnProperty方法判断属性是否存在**
+``` js
+var o = new Object()
+o.pop = 1
+function delPop() {
+o.newPop = o.pop
+delete o.pop
+}
+
+console.log(o.hasOwnProperty('pop')) // 返回true
+delPop()
+console.log(o.hasOwnProperty('pop')) // 返回false
+```
+
+**自身属性与继承属性**
+
+``` js
+var o = new Object()
+o.test = 'a'
+console.log(o.hasOwnProperty('test')) // true
+console.log(o.hasOwnProperty('valueOf')) // false
+console.log(o.hasOwnProperty('toString')) // false
+```
+我们可以看到，`hasOwnProperty`只能检测当前对象的自身属性，并不能检查到`原型链`上面的属性
+
+::: warning 
+javascript并没有对`hasOwnProperty`做任何保护，因此某个对象是有可能存在这个属性名的属性，使用**外部**`hasOwnProperty`获得正确的结果
+::: 
+``` js
+var foo = {
+    hasOwnProperty: function() {
+        return false
+    },
+    bar: 1
+}
+
+foo.hasOwnProperty('bar') // 这里始终返回false
+// 如果担心这种情况，可以直接使用原型链上真正的hasOwnProperty方法
+({}).hasOwnProperty.call(foo, 'bar') // true
+// 也可以使用Object 原型上的 hasOwnProperty 属性
+Object.prototype.hasOwnProperty.call(foo, 'bar') // true
+```
